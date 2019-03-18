@@ -1,0 +1,42 @@
+<?php
+
+  use BASS\Controllers\Auth\RegisterController;
+
+
+  $regController = new RegisterController($container);
+  $companies = $regController->getCompanies();
+?>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The Electric Couriers</title>
+  </head>
+  <body>
+    <form method="post" action="../api/v1/user/create">
+      <div class="form_description">
+        <h2>Create new User</h2>
+        <p>Fill in the form to create a new user.</p>
+      </div>
+
+      <label class="description" for="firstname">Firstname </label>
+      <input name="firstname" class="element text medium" type="text" maxlength="255" value=""/>
+      <br/>
+      <label class="description" for="lastname">Lastname </label>
+      <input name="lastname" class="element text medium" type="text" maxlength="255" value=""/>
+      <br/>
+      <label class="description" for="company">Company </label>
+      <select class="element select medium" name="company">
+        <?php foreach ($companies as $key => $value): ?>
+          <option value="<?php echo $value['companyID']; ?>" ><?php echo $value['name']; ?></option>
+        <?php endforeach; ?>
+      </select>
+      <br/>
+      <input name="card" class="element checkbox" type="checkbox" value="1" />
+      <label class="choice" for="card">Create card</label>
+      <br/>
+      <input class="button_text" type="submit" name="submit" value="Create User" />
+    </form>
+  </body>
+</html>

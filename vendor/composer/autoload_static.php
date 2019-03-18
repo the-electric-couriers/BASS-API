@@ -23,6 +23,8 @@ class ComposerStaticInite591eb472754e8a3d357d2fbfab8ff7c
         ),
         'T' => 
         array (
+            'Tuupola\\Middleware\\' => 19,
+            'Tuupola\\Http\\Factory\\' => 21,
             'Tests\\' => 6,
         ),
         'S' => 
@@ -35,6 +37,7 @@ class ComposerStaticInite591eb472754e8a3d357d2fbfab8ff7c
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Server\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
         ),
@@ -48,12 +51,21 @@ class ComposerStaticInite591eb472754e8a3d357d2fbfab8ff7c
         ),
         'F' => 
         array (
+            'Firebase\\JWT\\' => 13,
             'FastRoute\\' => 10,
         ),
         'D' => 
         array (
             'Doctrine\\Instantiator\\' => 22,
             'DeepCopy\\' => 9,
+        ),
+        'C' => 
+        array (
+            'CorsSlim\\' => 9,
+        ),
+        'B' => 
+        array (
+            'BASS\\' => 5,
         ),
     );
 
@@ -67,6 +79,15 @@ class ComposerStaticInite591eb472754e8a3d357d2fbfab8ff7c
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Tuupola\\Middleware\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tuupola/callable-handler/src',
+            1 => __DIR__ . '/..' . '/tuupola/slim-jwt-auth/src',
+        ),
+        'Tuupola\\Http\\Factory\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tuupola/http-factory/src',
         ),
         'Tests\\' => 
         array (
@@ -92,9 +113,15 @@ class ComposerStaticInite591eb472754e8a3d357d2fbfab8ff7c
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Psr\\Http\\Server\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-server-handler/src',
+            1 => __DIR__ . '/..' . '/psr/http-server-middleware/src',
+        ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Container\\' => 
         array (
@@ -108,6 +135,10 @@ class ComposerStaticInite591eb472754e8a3d357d2fbfab8ff7c
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
         ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
@@ -119,6 +150,14 @@ class ComposerStaticInite591eb472754e8a3d357d2fbfab8ff7c
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'CorsSlim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/palanik/corsslim',
+        ),
+        'BASS\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/BASS',
         ),
     );
 

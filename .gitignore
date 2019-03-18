@@ -4,3 +4,4 @@ logs/app.log
 /logs/*
 !/logs/README.md
 .DS_Store
+vendor
