@@ -2,6 +2,7 @@
 // DIC configuration
 
 $container = $app->getContainer();
+$container->register(new \BASS\Services\Auth\AuthServiceProvider());
 
 // view renderer
 $container['renderer'] = function ($c) {

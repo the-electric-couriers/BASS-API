@@ -25,15 +25,13 @@ class RegisterController {
           $stmt->bindParam("companyID", $emp['company']);
           $stmt->execute();
 
+          $lastID = $this->db->lastInsertId();
+          $this->__createLoginUser($lastID, $emp['email'], $emp['password']);
+
           if(array_key_exists('card', $emp)) {
-            $lastID = $this->db->lastInsertId();
             $cardCode = rand(0000000000000001, 9999999999999999);
 
-            $stmt = $this->db->prepare($cardSQL);
-            $stmt->bindParam("userID", $lastID);
-            $stmt->bindParam("cardCode", $cardCode);
-            $stmt->execute();
-
+            $this->__createUserCard($lastID, $cardCode);
             $this->__generateCard($cardCode, $emp['firstname'] . ' ' . $emp['lastname']);
           }
       } catch(PDOException $e) {
@@ -45,6 +43,26 @@ class RegisterController {
       $sql = "SELECT companyID, name FROM Company";
       $stmt = $this->db->query($sql);
       return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function __createUserCard($userID, $cardCode) {
+      $cardSQL = "INSERT INTO AccessCard (cardID, userID, accessCode, active) VALUES (NULL, :userID, :cardCode, '1')";
+
+      $stmt = $this->db->prepare($cardSQL);
+      $stmt->bindParam("userID", $userID);
+      $stmt->bindParam("cardCode", $cardCode);
+      $stmt->execute();
+    }
+
+    private function __createLoginUser($userID, $email, $password) {
+      $loginSQL = "INSERT INTO Login (userID, email, password, token, admin, lastLogin) VALUES (:userID, :email, :password, NULL, 0, CURRENT_TIMESTAMP)";
+      $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+      $stmt = $this->db->prepare($loginSQL);
+      $stmt->bindParam("userID", $userID);
+      $stmt->bindParam("email", $email);
+      $stmt->bindParam("password", $hashedPassword);
+      $stmt->execute();
     }
 
     private function __generateCard($cardCode, $user) {

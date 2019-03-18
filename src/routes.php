@@ -4,6 +4,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 
 use BASS\Controllers\Auth\RegisterController;
+use BASS\Controllers\User\UserController;
 
 // Routes
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
@@ -25,8 +26,10 @@ $app->get('/user/create', function (Request $request, Response $response, array 
 $app->group('/api', function () use ($app) {
   // Version group
   $app->group('/v1', function () use ($app) {
-    // $jwtMiddleware = $this->getContainer()->get('jwt');
+    $jwtMiddleware = $this->getContainer()->get('jwt');
 
     $app->post('/user/create', RegisterController::class . ':register');
+    $app->post('/user/login', UserController::class . ':login');
+    $app->post('/user/device', UserController::class . ':device');
   });
 });
