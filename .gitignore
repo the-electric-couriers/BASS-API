@@ -1,2 +1,6 @@
 src/settings.php
 logs/app.log
+/vendor/
+/logs/*
+!/logs/README.md
+.DS_Store
