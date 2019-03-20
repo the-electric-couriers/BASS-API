@@ -20,15 +20,16 @@ class UserController {
         $sql = "SELECT * FROM Login JOIN User ON User.userID = Login.userID JOIN Company ON Company.companyID = User.companyID WHERE email = '" . $emp['email'] . "'";
         $userData = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC)[0];
 
-        if(password_verify($emp['password'], $userData['password'])) {
-          $token = $this->auth->generateToken($userData['userID']);
-          $userData['token'] = $token;
-          $this->__updateUserToken($userData['email'], $token);
-
-          echo json_encode($userData);
-        } else {
+        if(!password_verify($emp['password'], $userData['password'])) {
           echo '{"error": true, "message": "Wrong username & password combination"}';
+          return;
         }
+        
+        $token = $this->auth->generateToken($userData['userID']);
+        $userData['token'] = $token;
+        $this->__updateUserToken($userData['email'], $token);
+
+        echo json_encode($userData);
     }
 
     function device($request) {

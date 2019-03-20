@@ -38,14 +38,13 @@ class Auth {
       return $token;
     }
 
-    public function authenticateUser(Request $request, $user) {
+    public function authenticateUser(Request $request, $user, $response) {
       $requestUser = $this->_requestUser($request);
 
-      if(is_null($requestUser) || $user != $requestUser[0]['userID']) {
+      if(is_null($requestUser) || $user != $requestUser[0]['userID'])
         return $response->withJson([], 401);
-      } else {
-        return true;
-      }
+
+      return true;
     }
 
     private function _requestUser(Request $request) {
