@@ -5,6 +5,7 @@ use Slim\Http\Response;
 
 use BASS\Controllers\Auth\RegisterController;
 use BASS\Controllers\User\UserController;
+use BASS\Controllers\Route\RouteController;
 
 // Routes
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
@@ -31,5 +32,8 @@ $app->group('/api', function () use ($app) {
     $app->post('/user/create', RegisterController::class . ':register');
     $app->post('/user/login', UserController::class . ':login');
     $app->post('/user/device', UserController::class . ':device');
+
+    $app->post('/route/new', RouteController::class . ':new')->add($jwtMiddleware);
+    $app->post('/route/points', RouteController::class . ':getRoutePoints')->add($jwtMiddleware);
   });
 });

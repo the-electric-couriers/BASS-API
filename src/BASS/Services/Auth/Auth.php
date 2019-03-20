@@ -11,7 +11,7 @@ use PDO;
 
 class Auth {
 
-    const SUBJECT_IDENTIFIER = 'email';
+    const SUBJECT_IDENTIFIER = 'userID';
 
     private $db;
     private $appConfig;
@@ -36,5 +36,28 @@ class Auth {
       $token = JWT::encode($payload, $secret, "HS256");
 
       return $token;
+    }
+
+    public function authenticateUser(Request $request, $user) {
+      $requestUser = $this->_requestUser($request);
+
+      if(is_null($requestUser) || $user != $requestUser[0]['userID']) {
+        return $response->withJson([], 401);
+      } else {
+        return true;
+      }
+    }
+
+    private function _requestUser(Request $request) {
+      if($token = $request->getAttribute('token')) {
+        $sql = "SELECT " . self::SUBJECT_IDENTIFIER . " FROM Login WHERE userID = " . $token[self::SUBJECT_IDENTIFIER];
+        try {
+            $stmt = $this->db->query($sql);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $data;
+        } catch(PDOException $e) {
+            return '{"error":{"text":'. $e->getMessage() .'}}';
+        }
+      };
     }
 }

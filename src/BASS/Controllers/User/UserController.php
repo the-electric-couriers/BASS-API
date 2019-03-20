@@ -21,7 +21,7 @@ class UserController {
         $userData = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC)[0];
 
         if(password_verify($emp['password'], $userData['password'])) {
-          $token = $this->auth->generateToken($userData['email']);
+          $token = $this->auth->generateToken($userData['userID']);
           $userData['token'] = $token;
           $this->__updateUserToken($userData['email'], $token);
 
