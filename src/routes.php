@@ -35,5 +35,7 @@ $app->group('/api', function () use ($app) {
 
     $app->post('/route/new', RouteController::class . ':new')->add($jwtMiddleware);
     $app->post('/route/points', RouteController::class . ':getRoutePoints')->add($jwtMiddleware);
+    $app->post('/route/checkIn', RouteController::class . ':checkIn')->add($jwtMiddleware);
+    $app->post('/route/checkOut', RouteController::class . ':checkOut')->add($jwtMiddleware);
   });
 });

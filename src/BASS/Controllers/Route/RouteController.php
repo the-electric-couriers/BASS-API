@@ -40,6 +40,22 @@ class RouteController {
       echo json_encode($this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    function checkIn($request) {
+      $route = $request->getParsedBody()['routeID'];
+      $updatesql = "UPDATE Route SET checkInTime = CURRENT_TIMESTAMP WHERE routeID = " . $route;
+      try { $this->db->query($updatesql); } catch(\PDOException $e) {
+          $this->_returnError($e);
+      }
+    }
+
+    function checkOut($request) {
+      $route = $request->getParsedBody()['routeID'];
+      $updatesql = "UPDATE Route SET checkOutTime = CURRENT_TIMESTAMP WHERE routeID = " . $route;
+      try { $this->db->query($updatesql); } catch(\PDOException $e) {
+          $this->_returnError($e);
+      }
+    }
+
     private function _returnError($e) {
       echo '{"success": false, "message": "' . $e->getMessage() . '"}';
     }
