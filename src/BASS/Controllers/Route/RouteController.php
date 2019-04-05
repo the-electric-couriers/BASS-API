@@ -17,13 +17,13 @@ class RouteController {
 
     function new($request, $response) {
         $emp = $request->getParsedBody();
-        $insertsql = "INSERT INTO Route (routeID, shuttleID, userID, checkInTime, checkOutTime, startPositionID, endPositionID) VALUES (NULL, :shuttleID, :userID, NULL, NULL, :startID, :endID)";
+        $insertsql = "INSERT INTO Route (routeID, shuttleID, userID, checkInTime, checkOutTime, startPositionID, endPositionID) VALUES (NULL, 1, :userID, NULL, NULL, :startID, :endID)";
         $user = $emp['userID'];
         $this->auth->authenticateUser($request, $user, $response);
 
         try {
             $stmt = $this->db->prepare($insertsql);
-            $stmt->bindParam("shuttleID", $emp['shuttleID']);
+            // $stmt->bindParam("shuttleID", $emp['shuttleID']);
             $stmt->bindParam("userID", $user);
             $stmt->bindParam("startID", $emp['startPosition']);
             $stmt->bindParam("endID", $emp['endPosition']);
@@ -56,6 +56,71 @@ class RouteController {
       if($this->_updateStatus($route))
         echo '{"success": true, "message": ""}';
     }
+
+    function routeHistory($request, $response) {
+      $emp = $request->getParsedBody();
+      $user = $emp['userID'];
+
+      $this->auth->authenticateUser($request, $user, $response);
+
+      $routeHistorySQL = "SELECT * FROM Route WHERE userID = " . $user;
+      $routePointsSQL = "SELECT routePointID, pointName FROM RoutePoint";
+
+      $routeHistory = $this->db->query($routeHistorySQL)->fetchAll(PDO::FETCH_ASSOC);
+      $routePoints = $this->db->query($routePointsSQL)->fetchAll(PDO::FETCH_ASSOC);
+      $routes = array();
+
+      foreach ($routeHistory as $key => $value) {
+        if($value['checkInTime'] == "") {
+          continue;
+        }
+
+        $checkInRoute = array();
+        $checkInRoute['status'] = 0;
+        $checkInRoute['type'] = 1;
+        $checkInRoute['timestamp'] = $value['checkInTime'];
+        $checkInRoute['date'] = explode(" ", $value['checkInTime'])[0];
+        $checkInRoute['time'] = explode(" ", $value['checkInTime'])[1];
+
+        foreach ($routePoints as $key => $routePointsValue) {
+          if($routePointsValue['routePointID'] == $value['startPositionID']) {
+            $checkInRoute['routePointName'] = $routePointsValue['pointName'];
+          }
+        }
+
+        if($checkInRoute['routePointName'] == "Station Roosendaal") {
+          $checkInRoute['type'] = 0;
+        }
+
+        array_push($routes, $checkInRoute);
+
+        if($value['checkOutTime'] == "") {
+          continue;
+        }
+
+        $checkOutRoute = array();
+        $checkOutRoute['status'] = 1;
+        $checkOutRoute['type'] = 1;
+        $checkOutRoute['timestamp'] = $value['checkOutTime'];
+        $checkOutRoute['date'] = explode(" ", $value['checkOutTime'])[0];
+        $checkOutRoute['time'] = explode(" ", $value['checkOutTime'])[1];
+
+        foreach ($routePoints as $key => $routePointsValue) {
+          if($routePointsValue['routePointID'] == $value['endPositionID']) {
+            $checkOutRoute['routePointName'] = $routePointsValue['pointName'];
+          }
+        }
+
+        if($checkOutRoute['routePointName'] == "Station Roosendaal") {
+          $checkOutRoute['type'] = 0;
+        }
+
+        array_push($routes, $checkOutRoute);
+      }
+
+      echo json_encode($routes);
+    }
+
 
     private function _validateCard($cardNumber, $user) {
       $sql = "SELECT accessCode FROM AccessCard WHERE userID = " . $user;
