@@ -1,2 +1,11 @@
 src/settings.php
 logs/app.log
+/vendor/
+/logs/*
+!/logs/README.md
+.DS_Store
+vendor
+public/img/cards
+public/test
+.DS_Store
+.DS_Store
