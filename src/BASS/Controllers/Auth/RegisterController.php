@@ -1,4 +1,12 @@
 <?php
+/**
+ * RegisterController
+ *
+ * Controller Class containing all methods for registering a new user.
+ *
+ * @copyright  Thomas Hopstaken
+ * @since      18 - 03 - 2019
+ */
 
 namespace BASS\Controllers\Auth;
 
@@ -13,6 +21,11 @@ class RegisterController {
         $this->db = $container->get('db');
     }
 
+    /**
+     * Method for registering new user
+     * @param  ArrayObject $request POST API object
+     * @return JSON return
+     */
     public function register($request) {
       $emp = $request->getParsedBody();
       $userSQL = "INSERT INTO User (userID, firstname, lastname, companyID) VALUES (NULL, :firstname, :lastname, :companyID)";
@@ -39,12 +52,22 @@ class RegisterController {
       }
     }
 
+    /**
+     * Method for returning list of all companies
+     * @return JSON return object list with companies
+     */
     public function getCompanies() {
       $sql = "SELECT companyID, name FROM Company";
       $stmt = $this->db->query($sql);
       return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Method for creating a new card
+     * @param  Integer $userID ID of user
+     * @param  Integer $cardCode unique card ID
+     * @return JSON return
+     */
     private function __createUserCard($userID, $cardCode) {
       $cardSQL = "INSERT INTO AccessCard (cardID, userID, accessCode, active) VALUES (NULL, :userID, :cardCode, '1')";
 
@@ -54,6 +77,13 @@ class RegisterController {
       $stmt->execute();
     }
 
+    /**
+     * Method for creating a new login user
+     * @param  Integer $userID ID of user
+     * @param  String $email user email
+     * @param  String $password user password
+     * @return JSON return
+     */
     private function __createLoginUser($userID, $email, $password) {
       $loginSQL = "INSERT INTO Login (userID, email, password, token, admin, lastLogin) VALUES (:userID, :email, :password, NULL, 0, CURRENT_TIMESTAMP)";
       $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -65,6 +95,12 @@ class RegisterController {
       $stmt->execute();
     }
 
+    /**
+     * Method for generating a custom card PDF
+     * @param  Integer $cardCode unique card ID
+     * @param  String $user full user name
+     * @return PDF return newly created PDF
+     */
     private function __generateCard($cardCode, $user) {
       $pdf = new Pdf('img/cards/basecard.pdf');
       $pdf->fillForm([

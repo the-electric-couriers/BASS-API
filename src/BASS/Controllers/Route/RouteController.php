@@ -1,4 +1,12 @@
 <?php
+/**
+ * RouteController
+ *
+ * Controller Class containing all methods regarding the route logic.
+ *
+ * @copyright  Thomas Hopstaken
+ * @since      20 - 03 - 2019
+ */
 
 namespace BASS\Controllers\Route;
 
@@ -15,6 +23,12 @@ class RouteController {
         $this->auth = $container->get('auth');
     }
 
+    /**
+     * Method for registering new route
+     * @param  ArrayObject $request POST API object
+     * @param  ArrayObject $response POST response object
+     * @return JSON return
+     */
     function new($request, $response) {
         $emp = $request->getParsedBody();
         $insertsql = "INSERT INTO Route (routeID, shuttleID, userID, checkInTime, checkOutTime, startPositionID, endPositionID) VALUES (NULL, 1, :userID, NULL, NULL, :startID, :endID)";
@@ -35,11 +49,21 @@ class RouteController {
         }
     }
 
+    /**
+     * Method for returning list of all route points
+     * @return JSON return
+     */
     function getRoutePoints() {
       $sql = "SELECT * FROM RoutePoint";
       echo json_encode($this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    /**
+     * Method for checking in/out
+     * @param  ArrayObject $request POST API object
+     * @param  ArrayObject $response POST response object
+     * @return JSON return
+     */
     function checkIn($request, $response) {
       $emp = $request->getParsedBody();
       $cardNum = $emp['card'];
@@ -57,6 +81,12 @@ class RouteController {
         echo '{"success": true, "message": ""}';
     }
 
+    /**
+     * Method for returning list of user specific route history
+     * @param  ArrayObject $request POST API object
+     * @param  ArrayObject $response POST response object
+     * @return JSON return
+     */
     function routeHistory($request, $response) {
       $emp = $request->getParsedBody();
       $user = $emp['userID'];
@@ -122,6 +152,12 @@ class RouteController {
     }
 
 
+    /**
+     * Method for validating a card bound to a user
+     * @param  Integer $cardNumber card number
+     * @param  Integer $user userID
+     * @return JSON return
+     */
     private function _validateCard($cardNumber, $user) {
       $sql = "SELECT accessCode FROM AccessCard WHERE userID = " . $user;
 
@@ -129,12 +165,17 @@ class RouteController {
         $dbCard = $this->db->query($sql)->fetchAll(PDO::FETCH_COLUMN)[0];
       } catch(\PDOException $e) { }
 
-      if(is_null($dbCard) || is_null($cardNumber) || $dbCard != $cardNumber)
+      if(is_null($dbCard) || is_null($cardNumber) || trim($dbCard, " ") != trim($cardNumber, " "))
         return false;
 
       return true;
     }
 
+    /**
+     * Method for updating route status
+     * @param  Integer $routeID routeID
+     * @return JSON return
+     */
     private function _updateStatus($routeID) {
       $selectsql = "SELECT checkInTime FROM Route WHERE routeID = " . $routeID;
       $statusValue = 'checkInTime';
@@ -156,6 +197,11 @@ class RouteController {
       return true;
     }
 
+    /**
+     * Method for returning error
+     * @param  Error $e error object
+     * @return JSON return
+     */
     private function _returnError($e) {
       echo '{"success": false, "message": "' . $e->getMessage() . '"}';
     }
