@@ -9,10 +9,7 @@ use BASS\Controllers\Route\RouteController;
 
 // Routes
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
-    // Sample log message
     $this->logger->info("Main Page Route");
-
-    // Render index view
     return $this->renderer->render($response, 'index.phtml', $args);
 });
 
@@ -20,8 +17,6 @@ $app->get('/user/create', function (Request $request, Response $response, array 
     $this->logger->info("New User Create Route");
     return $this->renderer->render($response, 'user.phtml', array('container' => $app->getContainer()));
 });
-
-
 
 // API group
 $app->group('/api', function () use ($app) {
